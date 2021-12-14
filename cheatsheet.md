@@ -250,4 +250,83 @@ const routes: Routes = [
 <router-outlet></router-outlet>
 ```
 
+### Nested Routes
+```js
+const routes: Routes = [
+  { path: 'reservationlist-component', component: ReservationListComponent, children: [
+      {path: 'r1sub1': component: SubComponent1},
+      {path: 'r1sub2': component: SubComponent2},
+  ] },
+];
+```
+Wichtig: In den Parent Components gehört immer a router-outlet (also in dem Fall in der AppComponent und ReservationListComponent)
+```html
+<a [routerLink]="['reservationlist-component', 'r1sub1']">Sub</a>
+Alternativ:
+<a [routerLink]="['reservationlist-component/r1sub1']">Subcomponent</a>
 
+<router-outlet></router-outlet>
+```
+
+## Übergabe von Parameter
+```js
+const appRoutes: Routes = [
+    {path: 'user/:id/:name', component: UserComponent}
+];
+```
+
+```js
+export class UserComponent implements OnInit {
+    id: number;
+    name: string;
+
+    constructor(private route: ActivatedRoute) { }
+
+    ngOnInit() {
+        // this.id = this.route.snapshot.params['id'];
+        // this.name = this.route.snapshot.params['name'];
+
+        this.route.params.subscribe(
+            (params: Params) => {
+                this.id = params['id'];
+                this.name = params['name'];
+            }
+        )
+    }
+}
+```
+
+## Query Parameter
+```html
+<a 
+    [routerLink]="['/user', 1, 'Max']" 
+    [queryParams]="{allowEdit: '1' }"
+    fragment="editing"
+>
+    Bearbeite User
+</a>
+
+ localhost:4200/user/1/Max?allowEdit=1
+
+```
+
+
+```js
+export class UserComponent implements OnInit {
+    id: number;
+    name: string;
+
+    constructor(private route: ActivatedRoute) { }
+
+    ngOnInit() {
+        // this.id = this.route.snapshot.params['id'];
+        // this.name = this.route.snapshot.params['name'];
+
+        this.route.queryParams.subscribe(
+            (queryParams) => {
+                this.allowEdit = queryParams['allowEdit'];
+            }
+        )
+    }
+}
+```
