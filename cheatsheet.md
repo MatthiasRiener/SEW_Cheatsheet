@@ -31,21 +31,23 @@ ng generate @angular/material:<material-element> <component-name>
 Genauerer Beschreibung in den einzelnen Kapiteln
 
 # Components Databinding
-```javascript
-
 1. Values weitergeben beim Component verwenden
+```HTML
 <app-greeting
     vorname="Max"
     [nachname]="'Muster'"
 >
 </app-greeting>
-
+```
 2. Im Typescript
+
+```typescript
 export class GreetingComponent {
     @Input('vorname') firstname | undefined;
     @Input('nachname') lastname | undefined;
 }
-
-3. Im HTML
-Hello {{firstname}} {{lastname}}!
+```
+3. Im HTML von der GreetingComponent
+```HTML
+<p>Hello {{firstname}} {{lastname}}!</p>
 ```
