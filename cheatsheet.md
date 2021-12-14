@@ -456,7 +456,7 @@ ng generate @angular/material:address-form <component-name>
 
     </mat-card-content>
     <mat-card-actions>
-      <button mat-raised-button color="primary" type="submit">Submit</button>
+      <button  [disabled]="!this.addressForm.valid"  mat-raised-button color="primary" type="submit">Edit</button>
     </mat-card-actions>
   </mat-card>
 </form>
@@ -502,5 +502,35 @@ export class ReactiveFormComponent implements OnInit{
       var username = this.addressForm.get('username')
     }
   }
+}
+```
+
+
+# Direktive
+```html
+<p [style.backgroundColor]="testvar == 5 ? 'red' : 'blue'">Test</p>
+
+<li  *ngFor="let u of users; let i=index">{{i}} - {{u}</li>}
+
+<p [ngStyle]="[backgroundColor: getColor()]">Text</p>
+```
+
+# Classes
+## Setup
+```js
+ng generate class <class-name>
+```
+
+## Example Class
+```ts
+export class Customer {
+    id: number = 0;
+    firstname: string = "";
+    lastname: string = "";
+    street: string = "";
+    houseno: string = "";
+    zip: string = "";
+    city: string = "";
+    password: string = "";
 }
 ```
