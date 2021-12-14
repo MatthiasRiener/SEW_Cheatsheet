@@ -100,3 +100,110 @@ export class GreetingComponent {
     }
 }
 ```
+
+## ViewChild
+* Zugriff auf HTML Elemente
+  
+```javascript
+export class GreetingComponent {
+    @ViewChild('nicknameInput', {static: true | false}) nicknameInput: ElementRef;
+    nickname;
+
+    login() {
+        this.nickname = this.nicknameInput.nativeElement.value;
+    }
+}
+```
+
+```HTML
+<input type="text" #nicknameInput>
+<button (click)="login()">Logout</button>
+```
+
+
+# HTTP Service erstellen
+* Dependency Injection!
+
+## Setup
+```
+ng generate service <service-name>
+```
+## Konfiguration für HTTP Service
+## Imports
+Im service-name.ts
+```js
+import  {HttpClient} from '@angular/common/http';
+```
+Im constructor
+```js
+constructor(private http: HttpClient) {
+
+}
+```
+Im app-module.ts
+```js
+import {HttpClientModule} from '@angular/common/http';
+
+@NgModule({
+    declaractions: [AppComponent],
+    imports: [BrowserModule, FormsModule, HttpClientModule],
+    providers: [],
+    bootstrap: [AppComponent]
+})
+```
+
+## Test Requests
+Optionaler function return type
+```js
+getCustomers(): Observable<Customers[]> {
+    return this.http.get<Customers[]>(`${this.baseUrl}/customers/getAllCustomers/`);
+}
+```
+### GET
+```js
+getCustomers() {
+    return this.http.get<Customers[]>(`${this.baseUrl}/customers/getAllCustomers/`);
+}
+```
+### POST
+```js
+createCustomer(customer: Customer) {
+    return this.http.post<Customer>(`${this.baseUrl}/customer`, customer);
+}
+```
+### UPDATE
+```js
+updateCustomer(customer: Customer) {
+    return this.http.put<Customer>(`${this.baseUrl}/customer`, customer);
+}
+```
+### DELETE
+ -> Info laut Julian i habs ned getestet ;)
+```js
+deleteCustomer(customer: Customer) {
+    return this.http.delete<Customer>(`${this.baseUrl}/customer`, customer);
+}
+```
+
+
+## Injecten und Verwendung von HTTP Service
+### Injecten
+```js
+constructor(private httpService: HttpService) {
+
+}
+```
+
+### Benutzen von HTTP Service
+```js
+loadCustomers() {
+    this.httpService.getCustomers().subscribe((data: Customers[]) => {
+      console.log("DO SAN DE CUSTOMER JAWOIIII!")
+    }, (error) => {
+        console.log("kane customer :(");
+        console.error(error);
+    });
+}
+```
+
+
