@@ -238,8 +238,8 @@ const routes: Routes = [
 ## Navigieren
 ### Normal über Route
 ```html
-<a [routerLink]="['./customer-component']">Kundendaten</a>
-<a routerLink="/customer-component">Kundendaten</a>
+<a [routerLink]="['customer-component']">Kundendaten</a>
+<a routerLink="customer-component">Kundendaten</a>
 <a  href="reservationlist-component">Reservierungsliste</a>
 
 ```
@@ -264,6 +264,8 @@ Wichtig: In den Parent Components gehört immer a router-outlet (also in dem Fal
 <a [routerLink]="['reservationlist-component', 'r1sub1']">Sub</a>
 Alternativ:
 <a [routerLink]="['reservationlist-component/r1sub1']">Subcomponent</a>
+Alternativ:
+<a [routerLink]="reservationlist-component/r1sub1">Subcomponent</a>
 
 <router-outlet></router-outlet>
 ```
@@ -274,7 +276,7 @@ const appRoutes: Routes = [
     {path: 'user/:id/:name', component: UserComponent}
 ];
 ```
-
+Auslesen von Params
 ```js
 export class UserComponent implements OnInit {
     id: number;
@@ -309,6 +311,7 @@ export class UserComponent implements OnInit {
  localhost:4200/user/1/Max?allowEdit=1
 
 ```
+Auslesen von QueryParams
 
 
 ```js
@@ -323,10 +326,78 @@ export class UserComponent implements OnInit {
         // this.name = this.route.snapshot.params['name'];
 
         this.route.queryParams.subscribe(
-            (queryParams) => {
+            (queryParams: Params) => {
                 this.allowEdit = queryParams['allowEdit'];
             }
         )
     }
 }
+```
+
+
+## Navigieren mittels Programmlogik
+```js
+  constructor(private router: Router) {
+
+  }
+
+  navigateTo() {
+    // greeting-component/subcomponent/1
+    this.router.navigate(['greeting-component', 'subcomponent', '1'], 
+        {queryParams: {"isEdit": '1'}})
+  }
+```
+== 
+```html
+<a 
+    [routerLink]="['greeting-component', 'subcomponent', '1']" 
+    [queryParams]="{isEdit: '1' }"
+>
+```
+
+# Forms
+
+## Template Driven - TDF
+### Setup
+```js
+import {FormsModule} from '@angular/forms';
+// Auch in imports Array reinballern 
+```
+
+### Example
+```html
+<form (ngSubmit)="onSubmit(f)" #f="ngForm">
+    <input type="text " class="form-control" ngModel #username="ngModel" id="username" name="username" required>
+
+    <input type="email" class="form-control" ngModel name="email" required email #email="ngModel" min-length="3">
+    <span>{{email.value}}</span>
+
+    <button class="btn btn-primary" type="submit" [disabled]="!f.valid">Submit</button>
+</form>
+
+Weitere Parameter:
+- required
+- min-length="3"
+- max-length="3"
+- email (email verifier)
+- pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
+
+
+Input Types:
+- number
+- tel
+```
+### Auslesen der Daten bei Submit
+```js
+onSubmit(f: NgForm) {
+    console.log(f.value)
+}
+```
+
+## Reactive 
+### Setup
+```js
+import {ReactiveFormsModule} from '@angular/forms';
+// Auch in imports Array reinballern 
+
 ```
