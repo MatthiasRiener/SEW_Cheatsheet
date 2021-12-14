@@ -207,3 +207,47 @@ loadCustomers() {
 ```
 
 
+# Routing
+## Routing konfgurieren, falls noch nicht vorhanden
+```
+ng generate module app-routing --flat --module=app
+```
+Dann sollte app-routing.module.ts vorhanden sein
+## SETUP
+(in app-routing.module.ts oder app.module.ts)
+### Import
+```js
+import { RouterModule, Routes } from '@angular/router';
+```
+### Routes definieren
+```js
+const routes: Routes = [
+  { path: '', component: CustomerComponent },
+  { path: 'customer-component', component: CustomerComponent },
+  { path: 'reservationlist-component', component: ReservationListComponent },
+];
+
+```
+```js
+@NgModule({
+  imports: [RouterModule.forRoot(routes)],
+  exports: [RouterModule]
+})
+```
+
+## Navigieren
+### Normal über Route
+```html
+<a [routerLink]="['./customer-component']">Kundendaten</a>
+<a routerLink="/customer-component">Kundendaten</a>
+<a  href="reservationlist-component">Reservierungsliste</a>
+
+```
+
+### Router Outlet einfügen bitte ahhhh
+* In das Router-Outlet wird die aktuelle Component geladen
+```html
+<router-outlet></router-outlet>
+```
+
+
