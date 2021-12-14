@@ -81,3 +81,22 @@ export class GreetingComponent {
 >
 </app-greeting>
 ```
+
+## Local References
+* Wird über Template an TS-File übergeben
+* Syntax: #Bezeichner
+```HTML
+<input type="text" #nicknameInput>
+<button (click)="login(nicknameInput)">Login</button>
+Hello {{ nickname }}`!
+```
+
+```javascript
+export class GreetingComponent {
+    nickname;
+
+    login(nicknameInput: HTMLInputElement) {
+        this.nickname = nicknameInput.value;
+    }
+}
+```
