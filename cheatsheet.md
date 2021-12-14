@@ -24,6 +24,11 @@ ng generate service <service-name>
 ng generate class <class-name>
 ```
 
+### Material Support hinzufügen
+```
+ng add @angular/material
+```
+
 ### Material Component erstellen
 ```
 ng generate @angular/material:<material-element> <component-name>
@@ -372,7 +377,7 @@ import {FormsModule} from '@angular/forms';
     <input type="email" class="form-control" ngModel name="email" required email #email="ngModel" min-length="3">
     <span>{{email.value}}</span>
 
-    <button class="btn btn-primary" type="submit" [disabled]="!f.valid">Submit</button>
+    <button class="btn btn-primary" type="submit" [disabled]="!f.valid || !f.dirty">Submit</button>
 </form>
 
 Weitere Parameter:
@@ -390,7 +395,10 @@ Input Types:
 ### Auslesen der Daten bei Submit
 ```js
 onSubmit(f: NgForm) {
+    console.log(f.value['username'])
     console.log(f.value)
+    // deep copy erstellen
+    var obj = Object.assign({}, f.value);
 }
 ```
 
@@ -399,5 +407,100 @@ onSubmit(f: NgForm) {
 ```js
 import {ReactiveFormsModule} from '@angular/forms';
 // Auch in imports Array reinballern 
+```
 
+### Erstellen von am Form
+```
+ng generate @angular/material:address-form <component-name>
+```
+
+
+### Example
+``` html
+<form [formGroup]="addressForm" novalidate (ngSubmit)="onSubmit()">
+  <mat-card class="shipping-card">
+    <mat-card-content>
+      
+      <div class="row">
+        <div class="col">
+          <mat-form-field class="full-width">
+            <input matInput placeholder="First name" formControlName="firstName">
+            <mat-error *ngIf="addressForm.controls['firstName'].hasError('required')">
+              First name is <strong>required</strong>
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+      </div>
+      <div class="row">
+        <div class="col">
+          <mat-form-field class="full-width">
+            <textarea matInput placeholder="Address" formControlName="address"></textarea>
+            <mat-error *ngIf="addressForm.controls['address'].hasError('required')">
+              Address is <strong>required</strong>
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+
+
+      <div class="row">
+        <div class="col">
+          <mat-form-field class="full-width">
+            <input matInput #postalCode maxlength="5" placeholder="Postal Code" type="number"
+              formControlName="postalCode">
+            <mat-hint align="end">{{postalCode.value.length}} / 5</mat-hint>
+          </mat-form-field>
+        </div>
+      </div>
+
+    </mat-card-content>
+    <mat-card-actions>
+      <button mat-raised-button color="primary" type="submit">Submit</button>
+    </mat-card-actions>
+  </mat-card>
+</form>
+```
+
+```js
+
+export class ReactiveFormComponent implements OnInit{
+  addressForm = this.fb.group({
+    firstName: [null, Validators.required],
+    address: [null, Validators.required],
+    postalCode: [null, Validators.compose([
+      Validators.required, Validators.minLength(5), Validators.maxLength(5)])
+    ],
+  });
+
+  // values reinpatchen!
+  ngOnInit(): void {
+    this.addressForm.patchValue(
+      data
+    );
+
+    // oder für einzelnes value
+    this.addressForm.setValue(
+      {
+        firstName: "Gerry",
+        address: "Gerry"
+      }
+    )
+      
+    // oder
+    this.addressForm.controls['firstName'].setValue("Gerry");
+  }
+
+  constructor(private fb: FormBuilder, private httpService: HttpServiceService) {}
+
+
+  // on submit
+  onSubmit(): void {
+    if (this.addressForm.valid) {
+      console.log("Voi valid!");
+      var res = Object.assign({}, this.addressForm.value);
+      var username = this.addressForm.get('username')
+    }
+  }
+}
 ```
