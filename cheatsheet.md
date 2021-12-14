@@ -32,6 +32,14 @@ ng add @angular/material
 ### Material Component erstellen
 ```
 ng generate @angular/material:<material-element> <component-name>
+
+Andere Möglichkeiten:
+- address-form
+- navigation
+- dashboard
+- table
+- tree
+- drag-drop
 ```
 Genauerer Beschreibung in den einzelnen Kapiteln
 
@@ -534,3 +542,139 @@ export class Customer {
     password: string = "";
 }
 ```
+
+# Subject
+```ts
+export class SearchService {
+    searchSource = new Subject<string>();
+    constructor() {}
+
+    setSearchString(message: string) {
+        this.searchSource.next(message);
+    }
+}
+```
+
+```ts
+export class Comp1 implements OnInit {
+    constructor(private searchService: SearchService) {}
+
+    ngOnInit() {
+
+    }
+
+    search(word: HTMLInputElement) {
+        this.searchService
+            .setSearchString(word.value);
+    }
+}
+```
+
+```ts
+export class Comp2Component implements OnInit, OnDestroy{
+
+    searchSubscription: Subscription;
+
+    constructor(private searchService: SearchService){ }
+
+    ngOnInit() {
+        this.searchSubscription = this.searchService.searchSource.subscribe(
+            (data:string)=>{
+                console.log(data);
+            }
+        )
+    )
+
+    ngOnDestroy(){
+        this.searchSubscription.unsubscribe();
+    }
+    
+}
+```
+
+# Menu
+## Setup
+```js
+ng generate @angular/material:navigation Menu
+```
+## Example
+Bei mat-nav-list:
+```html
+<a routerLink="loginMask" mat-list-item >Anmeldung</a>
+```
+Bei Kommentar
+```html
+<router-outlet></router-outlet>
+```
+
+
+# List
+## Setup
+```js
+ng generate @angular/material:table ReservationList
+```
+
+## Example
+```html
+<div class="mat-elevation-z8">
+  <table mat-table class="full-width-table" matSort aria-label="Elements">
+
+    <!-- Name Column -->
+    <ng-container matColumnDef="start">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Datum</th>
+      <td mat-cell *matCellDef="let row">{{row.start | date:'dd.MM.yyyy'}}</td>
+    </ng-container>
+
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+  </table>
+
+  <mat-paginator #paginator
+      [length]="dataSource?.data?.length"
+      [pageIndex]="0"
+      [pageSize]="10"
+      [pageSizeOptions]="[5, 10, 20]">
+  </mat-paginator>
+</div>
+```
+## JS
+```ts
+export class ReservationListComponent implements AfterViewInit {
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild(MatSort) sort!: MatSort;
+  @ViewChild(MatTable) table!: MatTable<Reservation>;
+  dataSource!: MatTableDataSource<Reservation>;
+
+  /** Columns displayed in the table. Columns IDs can be added, removed, or reordered. */
+  //displayedColumns = ['id', 'start', 'time'];
+  displayedColumns = ['start'];
+
+  constructor(private httpService: RestService) {
+  }
+
+  ngOnInit(): void {
+    this.dataSource = new MatTableDataSource<Reservation>();
+    this.refreshData();
+  }
+
+  ngAfterViewInit(): void {
+    this.dataSource.sort = this.sort;
+    this.dataSource.paginator = this.paginator;
+  }
+
+  refreshData() {
+    this.httpService.getReservations(this.httpService.custid).subscribe((data) => {
+      this.dataSource = new MatTableDataSource<Reservation>(data);
+      this.table.dataSource = this.dataSource;
+    });
+  }
+}
+```
+
+
+
+
+
+
