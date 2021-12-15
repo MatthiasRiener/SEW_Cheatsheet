@@ -674,12 +674,12 @@ export class ReservationListComponent implements AfterViewInit {
   ngAfterViewInit(): void {
     this.dataSource.sort = this.sort;
     this.dataSource.paginator = this.paginator;
+    this.table.dataSource = this.dataSource;
   }
 
   refreshData() {
     this.httpService.getReservations(this.httpService.custid).subscribe((data) => {
-      this.dataSource = new MatTableDataSource<Reservation>(data);
-      this.table.dataSource = this.dataSource;
+      this.datasource.data = data;
     });
   }
 }
