@@ -402,8 +402,8 @@ import {FormsModule} from '@angular/forms';
 
 Weitere Parameter:
 - required
-- min-length="3"
-- max-length="3"
+- minlength="3"
+- maxlength="3"
 - email (email verifier)
 - pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
 
