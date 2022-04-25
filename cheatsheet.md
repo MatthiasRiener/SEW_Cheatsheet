@@ -9,6 +9,7 @@
 8. [Subject](#subject)
 9. [Menu](#menu)
 10. [List](#list)
+11. [Websockets](#websockets-juhu)
 
 # Allgemeine Befehle
 ### Projekt anlegen
