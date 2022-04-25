@@ -250,6 +250,7 @@ const routes: Routes = [
   { path: '', component: CustomerComponent },
   { path: 'customer-component', component: CustomerComponent },
   { path: 'reservationlist-component', component: ReservationListComponent },
+  { path: '**', component: CustomerComponent}
 ];
 
 ```
@@ -680,13 +681,30 @@ export class ReservationListComponent implements AfterViewInit {
   refreshData() {
     this.httpService.getReservations(this.httpService.custid).subscribe((data) => {
       this.datasource.data = data;
+      this.datasource.filter = "Hey!"
     });
   }
 }
 ```
 
+# Websockets JUHU!!
+```javascript
+import { webSocket, WebSocketSubject } from 'rxjs/webSocket';
 
+websocketSubject!: WebSocketSubject<any>
 
+ngOnInit(): void {
 
+  this.websocketSubject = webSocket({
+    url: "ws://localhost:8080/ws/" + this.cur_id,
+    deserializer: msg => msg.data
+  })
 
+  this.websocketSubject.subscribe((data) => {
+    console.log("NEUES PRODUKT: ");
+  });
+
+  this.websocketSubject.next('LOL');
+}
+```
 
